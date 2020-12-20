@@ -2,48 +2,46 @@ from math import sin, pi
 from struct import pack
 
 width = 200
-heigh = 200
+height = 200
 t = 0
 step = 0.01
 pixels = []
-xMin = float('inf')
-yMin = float('inf')
+x_min = float('inf')
+y_min = float('inf')
 
 while t <= 2 * pi:
     x = round(sin(t+pi/2) , 2)
-    if x <= xMin:
-        xMin = x
+    if x <= x_min:
+        x_min = x
     y = round(sin(2*t), 2)
-    if y <= yMin:
-        yMin = y
+    if y <= y_min:
+        y_min = y
     pixels.append((x, y))
     t += step
 
 pixels.reverse()
 
-
-
-def createBitmapHeader(width, heigh):
-    filetype = 19778
-    reserved1 = 0
-    resreved2 = 0
+def createBitmapHeader(width, height):
+    file_type = 19778
+    reserved_1 = 0
+    reserved_2 = 0
     offset = 62
-    filesize = offset + 1 * width * heigh
-    return pack("<HL2HL", filetype, filesize, reserved1, resreved2, offset)
+    file_size = offset + 1 * width * height
+    return pack("<HL2HL", file_type, file_size, reserved_1, reserved_2, offset)
 
 
-def createInfoHeader(width, heigh):
-    headerSize = 40
+def createInfoHeader(width, height):
+    header_size = 40
     planes = 1
-    bitsPerPixel = 8
+    bits_per_pixel = 8
     compression = 0
-    imageSize = 0
-    xPixelPerMeter = 0
-    yPixelPerMeter = 0
-    totalColors = 2
-    importantColors = 0
-    return pack("<3L2H6L", headerSize, width, heigh, planes, bitsPerPixel, compression, imageSize, xPixelPerMeter,
-                yPixelPerMeter, totalColors, importantColors)
+    image_size = 0
+    x_pixel_per_meter = 0
+    y_pixel_per_meter = 0
+    total_colors = 2
+    important_colors = 0
+    return pack("<3L2H6L", header_size, width, height, planes, bits_per_pixel, compression, image_size, x_pixel_per_meter,
+                y_pixel_per_meter, total_colors, important_colors)
 
 
 def createColorPallet():
@@ -53,17 +51,17 @@ def createColorPallet():
 
 
 with open('test.bmp', "wb") as f:
-    f.write(createBitmapHeader(width, heigh))
-    f.write(createInfoHeader(width, heigh))
+    f.write(createBitmapHeader(width, height))
+    f.write(createInfoHeader(width, height))
     f.write(createColorPallet())
 
-    yPix = yMin
-    for yVal in range(heigh):
-        xPix = xMin
-        for xVal in range(width):
-            if (xPix, yPix) in pixels:
+    y_pix = y_min
+    for y_val in range(height):
+        x_pix = x_min
+        for x_val in range(width):
+            if (x_pix, y_pix) in pixels:
                 f.write(pack("<B", 0))
             else:
                 f.write(pack("<B", 1))
-            xPix = round(xPix + step, 2)
-        yPix = round(yPix + step, 2)
+            x_pix = round(x_pix + step, 2)
+        y_pix = round(y_pix + step, 2)
