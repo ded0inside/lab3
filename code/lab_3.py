@@ -3,7 +3,7 @@ from struct import pack
 
 
 class BitmapGenerator:
-    def __init__(self, filename, width, height, x, y, t_start, t_stop, t_step):
+    def __init__(self, filename, width, height, x, y, t_start, t_stop, t_step, line_color):
         self.file = filename
         self.width = width
         self.height = height
@@ -14,6 +14,7 @@ class BitmapGenerator:
         self.t_start = t_start
         self.t_stop = t_stop
         self.t_step = t_step
+        self.line_color = line_color
         self.round_to = len(str(t_step)) - 2
 
     def __createBitmapHeader(self):
@@ -50,7 +51,7 @@ class BitmapGenerator:
         )
 
     def __createColorPallet(self):
-        color1 = (0, 0, 0, 0)
+        color1 = self.line_color
         color2 = (255, 255, 255, 0)
         return pack("<8B", *color1, *color2)
 
@@ -99,5 +100,6 @@ if __name__ == "__main__":
         t_step=0.01,
         x=lambda t: sin(t + pi / 2),
         y=lambda t: sin(2 * t),
+        line_color=(252,3,219,0)
     )
     bitmap.createBmp()
