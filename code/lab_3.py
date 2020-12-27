@@ -1,4 +1,4 @@
-from math import sin, pi
+from math import *
 from struct import pack
 
 
@@ -17,7 +17,7 @@ class BitmapGenerator:
         self.line_color = line_color
         self.round_to = len(str(t_step)) - 2
 
-    def __createBitmapHeader(self):
+    def __createBitmapHeader__(self):
         file_type = 19778
         reserved_1 = 0
         reserved_2 = 0
@@ -25,7 +25,7 @@ class BitmapGenerator:
         file_size = offset + self.width * self.height
         return pack("<HL2HL", file_type, file_size, reserved_1, reserved_2, offset)
 
-    def __createInfoHeader(self):
+    def __createInfoHeader__(self):
         header_size = 40
         planes = 1
         bits_per_pixel = 8
@@ -50,13 +50,13 @@ class BitmapGenerator:
             important_colors,
         )
 
-    def __createColorPallet(self):
+    def __createColorPallet__(self):
         color1 = list(self.line_color)
         color1.append(0)
         color2 = (255, 255, 255, 0)
         return pack("<8B", *color1, *color2)
 
-    def __createPixels(self):
+    def __createPixels__(self):
         pixels = []
         t = self.t_start
         while t <= self.t_stop:
@@ -71,12 +71,12 @@ class BitmapGenerator:
         pixels.reverse()
         return pixels
 
-    def createBmp(self):
+    def __createBmp__(self):
         with open(f"{self.file}.bmp", "wb") as f:
-            f.write(self.__createBitmapHeader())
-            f.write(self.__createInfoHeader())
-            f.write(self.__createColorPallet())
-            pixels = self.__createPixels()
+            f.write(self.__createBitmapHeader__())
+            f.write(self.__createInfoHeader__())
+            f.write(self.__createColorPallet__())
+            pixels = self.__createPixels__()
 
             y_pix = self.y_min
             for y_val in range(self.height):
@@ -103,4 +103,4 @@ if __name__ == "__main__":
         y=lambda t: sin(2 * t),
         line_color=(252,3,219)
     )
-    bitmap.createBmp()
+    bitmap.__createBmp__()
