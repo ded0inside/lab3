@@ -51,7 +51,8 @@ class BitmapGenerator:
         )
 
     def __createColorPallet(self):
-        color1 = self.line_color
+        color1 = list(self.line_color)
+        color1.append(0)
         color2 = (255, 255, 255, 0)
         return pack("<8B", *color1, *color2)
 
@@ -100,6 +101,6 @@ if __name__ == "__main__":
         t_step=0.01,
         x=lambda t: sin(t + pi / 2),
         y=lambda t: sin(2 * t),
-        line_color=(252,3,219,0)
+        line_color=(252,3,219)
     )
     bitmap.createBmp()
